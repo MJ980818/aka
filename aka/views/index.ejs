@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type="text/javascript" src="/data/store.js"></script>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=rqgqj63lho"></script>
+    <script
+  src="https://code.jquery.com/jquery-3.5.1.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
+  </head>
+  <body>
+
+  <div id="navbar">AKA</div>
+  <div id="infoBox">
+    <div id="infoContent">영업중 : ♥</div>
+    <div class="infoContent">영업종료 : ♡</div>
+  </div>
+  <!-- <div id="infoBox">
+    <div id="infoTitle">가게</div>
+    <div id="infoContent">내용</div>
+    <div class="infowindow_day">영업일</div>
+  </div> -->
+  <div id="search">
+    <!-- 시도명, 시군구 입력받아서 찾기 -->
+    시도명: 
+    <select name="city" id="city">
+      <option value="서울특별시" selected>서울특별시</option>
+      <option value="강원도">강원도</option>
+      <option value="경기도">경기도</option>
+      <option value="경상남도">경상남도</option>
+      <option value="경상북도">경상북도</option>
+      <option value="광주광역시">광주광역시</option>
+      <option value="대구광역시">대구광역시</option>
+      <option value="대전광역시">대전광역시</option>
+      <option value="부산광역시">부산광역시</option>
+      <option value="세종특별자치시">세종특별자치시</option>
+      <option value="울산광역시">울산광역시</option>
+      <option value="인천광역시">인천광역시</option>
+      <option value="전라남도">전라남도</option>
+      <option value="전라북도">전라북도</option>
+      <option value="충청남도">충청남도</option>
+      <option value="충청북도">충청북도</option>
+    </select>
+    <select name="smallcity" id="smallcity">
+
+    </select>
+
+    <script>
+
+      const sc = document.getElementById("smallcity");
+      
+      $(document).ready(function(){
+        while(sc.firstChild){
+          sc.removeChild(sc.firstChild);
+        }
+
+        let smallcitylist = [];
+        for(var j in data){
+          var target = data[j];
+          
+          if(target.시도명 === "서울특별시"){
+            if(smallcitylist.length == 0){
+              let content = `<option value="${target.시군구명}">${target.시군구명}</option>`
+                $("select[name=smallcity]").append(content);
+                smallcitylist.push(target.시군구명);
+            }else{
+              for(var i = 0; i<smallcitylist.length; i++){
+                if(target.시군구명 == smallcitylist[i]){
+                  break;
+                }
+              } 
+              if(i == smallcitylist.length){
+                // for문 통과
+                  console.log(target.시군구명);
+                  let content = `<option value="${target.시군구명}">${target.시군구명}</option>`
+                  $("select[name=smallcity]").append(content);
+                  smallcitylist.push(target.시군구명);
+              }
+            }
+            
+
+            }
+            
+          }
+          $("#smallcity option:eq(0)").prop("selected", true);
+
+      });
+        
+
+        
+
+
+
+      $("select[name=city]").change(function(){
+        while(sc.firstChild){
+          sc.removeChild(sc.firstChild);
+        }
+        
+        var city = $("select[name=city]").val();
+        let smallcitylist = [];
+        for(var j in data){
+          var target = data[j];
+          if(city == target.시도명){
+            if(smallcitylist.length == 0){
+              let content = `<option value="${target.시군구명}">${target.시군구명}</option>`
+                $("select[name=smallcity]").append(content);
+                smallcitylist.push(target.시군구명);
+            }else{
+              for(var i = 0; i<smallcitylist.length; i++){
+              if(target.시군구명 == smallcitylist[i]){
+                break;
+              }
+            }
+            if(i == smallcitylist.length){
+                console.log(target.시군구명);
+                let content = `<option value="${target.시군구명}">${target.시군구명}</option>`
+                $("select[name=smallcity]").append(content);
+                smallcitylist.push(target.시군구명);
+            }
+            }
+
+            
+
+            }
+            
+            
+          }
+        
+      });
+      
+    </script>
+    
+
+    <button id="search_button" onclick="button_clicked();">검색</button>
+  </div>
+  <div id="current">현재 위치</div>
+  <div id="map" style="width:100%;height:100vh;"></div>
+    <script>
+      var mapOptions = {
+        center: new naver.maps.LatLng(37.3595704, 127.105399),
+        zoom: 10
+      };
+      var map = new naver.maps.Map('map', mapOptions);
+      
+      let markerList = [];
+      let infowindowList = [];
+
+      for(var i in data){
+        var target = data[i];
+        var city = target.시도명;
+        var smallcity = target.시군구명;
+        var selectedcity = $("select[name=city]").val();
+        var selectedsmallcity = $("select[name=smallcity]").val();
+
+        if(city == selectedcity & smallcity == selectedsmallcity){
+          var storename = target.가맹점명;
+          var lat = float(target.위도);
+          var lng = float(target.경도);
+          var latlng = new naver.maps.LatLng(lat, lng);
+          marker = new naver.maps.Marker({
+            map: map,
+            position: latlng,
+            icon: {
+              content: "<div class='marker'></div>",
+              anchor: new naver.maps.Point(12,12)
+
+            },
+          });
+          
+          
+          var detail_content = `<div class="infowindow_wrap">
+            <div class="infowindow_title">${target.가맹점명}</div>
+            <div class="infowindow_content">${target.소재지도로명주소}</div>
+            <div class="infowindow_phone">전화번호 : ${target.전화번호}</div>
+            <div class="infowindow_day">평일 : ${target.평일운영시작시각}~${target.평일운영종료시각}</div>
+            <div class="infowindow_day">토요일 : ${target.토요일운영시작시각}~${target.토요일운영종료시각}</div>
+            <div class="infowindow_day">공휴일 : ${target.공휴일운영시작시각}~${target.공휴일운영종료시각}</div>
+            </div>`
+
+          var infowindow = new naver.maps.InfoWindow({
+            content: detail_content,
+            backgroundColor: "#00ff0000",
+            borderColor: "#00ff0000",
+            anchorSize: new naver.maps.Size(0,0)
+          })
+          markerList.push(marker);
+          infowindowList.push(infowindow);
+        }
+        
+      }
+
+      for(var i = 0, ii = markerList.length; i <ii; i++){
+        naver.maps.Event.addListener(map, "click", ClickMap(i));
+        naver.maps.Event.addListener(markerList[i], "click", getClickHandler(i));
+
+      }
+      
+
+      function button_clicked(){
+        map = new naver.maps.Map('map', mapOptions);
+        markerList = [];
+        infowindowList = [];
+        console.log('markerList',markerList);
+        console.log('infowindowList',infowindowList);
+      for(var i in data){
+        var target = data[i];
+        var city = target.시도명;
+        var smallcity = target.시군구명;
+        var selectedcity = $("select[name=city]").val();
+        var selectedsmallcity = $("select[name=smallcity]").val();
+        if(city == selectedcity & smallcity == selectedsmallcity){
+          var storename = target.가맹점명;
+          var lat = target.위도;
+          var lng = target.경도;
+          var latlng = new naver.maps.LatLng(lat, lng);
+          marker = new naver.maps.Marker({
+            map: map,
+            position: latlng,
+            icon: {
+              content: "<div class='marker'></div>",
+              anchor: new naver.maps.Point(12,12)
+
+            },
+          });
+          
+          var detail_content = `<div class="infowindow_wrap">
+            <div class="infowindow_title">${target.가맹점명}</div>
+            <div class="infowindow_content">${target.소재지도로명주소}</div>
+            <div class="infowindow_phone">전화번호 : ${target.전화번호}</div>
+            <div class="infowindow_day">평일 : ${target.평일운영시작시각}~${target.평일운영종료시각}</div>
+            <div class="infowindow_day">토요일 : ${target.토요일운영시작시각}~${target.토요일운영종료시각}</div>
+            <div class="infowindow_day">공휴일 : ${target.공휴일운영시작시각}~${target.공휴일운영종료시각}</div>
+            </div>`
+            
+
+          var infowindow = new naver.maps.InfoWindow({
+            content: detail_content,
+            backgroundColor: "#00ff0000",
+            borderColor: "#00ff0000",
+            anchorSize: new naver.maps.Size(0,0)
+          })
+          
+          markerList.push(marker);
+          infowindowList.push(infowindow);
+        }
+        
+      }
+      for(var i = 0, ii = markerList.length; i <ii; i++){
+        naver.maps.Event.addListener(map, "click", ClickMap(i));
+        naver.maps.Event.addListener(markerList[i], "click", getClickHandler(i));
+
+      }
+      }
+
+      
+
+
+function ClickMap(i){
+  return function(){
+    var infowindow = infowindowList[i];
+    infowindow.close();
+  }
+}
+function getClickHandler(i){
+  return function(){
+    var marker = markerList[i];
+    var infowindow = infowindowList[i];
+    if(infowindow.getMap()){
+      infowindow.close();
+    }else{
+      infowindow.open(map, marker);
+    }
+  }
+}
+
+</script>
+</body>
+</html>

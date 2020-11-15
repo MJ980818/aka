@@ -1,0 +1,115 @@
+body {
+  padding: 0px !important;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+#navbar{
+  height: 50px;
+  width: 100%;
+  background: #262626;
+  color: white;
+  font-weight: bolder;
+  font-size: 25px;
+  display: flex;
+  /* 가운데정렬 수직정렬을 쉽게해준다 */
+  justify-content: center;
+  align-items: center;
+}
+#infoBox{
+  position: absolute;
+  top: 100px;
+  z-index: 10000;
+  background: white;
+  left: 20px;
+  padding: 15px;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 4px;
+  text-align: center;
+  /* 지도의 z-index는 1000 */
+}
+#infoTitle{
+  font-size: 15px;
+  font-weight: bolder;
+}
+.marker{
+  border: 1px solid black;
+  background: green;
+  opacity: 0.8;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+.infowindow_wrap{
+  background: white;
+  padding: 20px;
+  border: 1px solid rgba(0,0,0,0.2);
+  height: 90px;
+}
+.infowindow_title{
+  font-size: 15px;
+  font-weight: bolder;
+}
+.infowindow_content{
+  font-size: 13px;
+  font-weight: normal;
+}
+.infowindow_phone{
+  font-size: 13px;
+  font-weight: normal;
+}
+.infowindow_day{
+  font-size: 13px;
+  font-weight: normal;
+}
+#current{
+  position: absolute;
+  top: 180px;
+  font-weight: border;
+  z-index: 10000;
+  background: white;
+  left: 20px;
+  padding: 15px;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+}
+.pulse{
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 0 rgb(255,0,0);
+  animation: pulse 1.7s infinite;
+}
+@keyframes pulse{
+  0%{
+    box-shadow: 0 0 0 0 rgba(204,49,44,0.4);
+    -moz-box-shadow: 0 0 0 0 rgba(204,49,44,0.4);
+  }
+  70%{
+    box-shadow: 0 0 0 20px rgba(204,49,44,0);
+    -moz-box-shadow: 0 0 0 20px rgba(204,49,44,0);
+  }
+  100%{
+    box-shadow: 0 0 0 0 rgba(204,49,44,0);
+    -moz-box-shadow: 0 0 0 0 rgba(204,49,44,0);
+  }
+}
+#search{
+  position: absolute;
+  top: 100px;
+  left:100px;
+  padding: 15px;
+  z-index: 10000;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 4px;
+  text-align: center;
+}
+#search_input{
+  border: none;
+}
+#search_input:focus{
+  outline: none;
+}
